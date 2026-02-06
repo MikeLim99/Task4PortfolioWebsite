@@ -9,6 +9,7 @@ import Footer from './components/footer'
 import PageNotFound from './pages/ErrorPages/404Error'
 import ProjectDetails from './pages/ProjectDetails'
 import AddProject from './pages/Auth/AddProject'
+import AddCertificate from './pages/Auth/addCertificate'
 
 const App = () => {
   return (
@@ -18,9 +19,12 @@ const App = () => {
         <Route path='/contacts' element={<ContactsPage />} />
         <Route path='/projects' element={<ProjectsPage />} />
         <Route path='/aboutme' element={<AboutPage />} />
-        <Route path='*' element={<PageNotFound />} />
         <Route path='/projectdetails/:id' element={<ProjectDetails />} />
         <Route path='/addproject' element={<AddProject />} />
+        <Route path='/addcertificate' element={<AddCertificate />} />
+
+        {/* Error Pages */}
+        <Route path='*' element={<PageNotFound />} />
       </Routes>
       <Footer />
     </div>

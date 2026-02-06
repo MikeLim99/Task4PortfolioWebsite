@@ -1,7 +1,5 @@
 import mongoose from 'mongoose'
 
-//project schema
-
 const projectSchema = new mongoose.Schema({
     ProjectName:
     {

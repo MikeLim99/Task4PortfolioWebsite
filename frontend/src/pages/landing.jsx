@@ -7,9 +7,11 @@ import { FaArrowDown } from "react-icons/fa";
 import Cards from '../components/basics/cards'
 import FeaturedProject from '../components/sections/featuredProject'
 import { useFetchProjects } from '../hooks/useFetchProjects'
+import useFetchCertificates from '../hooks/certificate/useFetchCertificates'
 
 const LandingPage = () => {
-  const { projectCount } = useFetchProjects()
+  const { projectCount } = useFetchProjects();
+  const { certificateCount } = useFetchCertificates();
   return (
     <div>
       <Navbar highlighted="page" />
@@ -35,9 +37,9 @@ const LandingPage = () => {
         <FaArrowDown />
         </div>
         <div className='bg-[#7E8C8D] h-[285px] p-10 flex justify-evenly items-center' id='down'>
-          <Cards Amount="10" Title="Certificates & Awards" />
+          <Cards Amount={certificateCount} Title="Certificates & Awards" />
           <Cards Amount={projectCount} Title="Projects Completed" />
-          <Cards Amount="3" Title="Years of Experience" />
+          <Cards Amount="1" Title="Years of Experience" />
         </div>
         <FeaturedProject />
     </div>

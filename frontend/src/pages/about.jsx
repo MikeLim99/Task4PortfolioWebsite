@@ -57,14 +57,6 @@ const AboutPage = () => {
       <h1 className='w-full text-center mb-15 text-5xl'>Certification & Awards</h1>
       <div className='w-[80%] h-[600px] flex flex-col items-center mb-10 border border-gray-300 rounded-md mx-auto overflow-auto'>
         <CertificationSection />
-        <CertificationSection />
-        <CertificationSection />
-        <CertificationSection />
-        <CertificationSection />
-        <CertificationSection />
-        <CertificationSection />
-        <CertificationSection />
-        <CertificationSection />
       </div>
     </div>
   )

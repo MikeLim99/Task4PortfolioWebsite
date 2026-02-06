@@ -6,6 +6,7 @@ import Images from "../../assets/unnamed.jpg";
 import InsertFileButton from "../../components/basics/InsertFileButton";
 import TagsInput from "../../components/basics/TagsInput";
 import useAddProject from "../../hooks/useAddProject";
+import { Toaster } from "react-hot-toast";
 
 function AddProject() {
   const [isImageOpen, setIsImageOpen] = useState(false);
@@ -56,6 +57,7 @@ function AddProject() {
                 OnChange={(e) =>
                   setFormData({ ...formData, ProjectName: e.target.value })
                 }
+                Required={true}
               />
               <InputField
                 PlaceHolder={"Assigned Position"}
@@ -64,6 +66,7 @@ function AddProject() {
                 OnChange={(e) =>
                   setFormData({ ...formData, assignedPosition: e.target.value })
                 }
+                Required={true}
               />
               <InputField
                 PlaceHolder={"Link"}

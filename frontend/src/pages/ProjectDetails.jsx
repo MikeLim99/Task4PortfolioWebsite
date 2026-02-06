@@ -5,6 +5,9 @@ import axios from 'axios';
 
 function ProjectDetails() {
   const [project, setProject] = useState(null)
+  const [isImageOpen, setIsImageOpen] = useState(false)
+const [selectedImage, setSelectedImage] = useState('')
+  
   const {id} = useParams();
 
   useEffect(() => {
@@ -37,14 +40,23 @@ function ProjectDetails() {
           </div>
           <div className='grid grid-cols-4 gap-5 my-10'>
             {project.images && project.images.map((img, index) => (
-              <div key={index} className='w-[300px] h-[200px] bg-white'>
-                <img src={img} alt={`Project Image ${index + 1}`} className="w-full h-full object-cover" />
+              <div key={index} className='w-[300px] h-[200px] bg-white rounded-lg overflow-hidden'>
+                <button onClick={() => { setSelectedImage(img); setIsImageOpen(true); }} className='w-full h-full'>
+                  <img src={img} alt={`Project Image ${index + 1}`} className="w-full h-full object-cover rounded-lg " />
+                </button>
               </div>
             ))}
           </div>
           </>
         )}
     </div>
+    {isImageOpen && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50' onClick={() => setIsImageOpen(false)} role="dialog" aria-modal="true">
+            <div className='relative max-w-4xl' onClick={(event)=>event.stopPropagation()}>
+                <img src={selectedImage} alt="" />
+            </div>
+        </div>
+    )}
     </>
   )
 }
