@@ -13,7 +13,7 @@ const [selectedImage, setSelectedImage] = useState('')
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/${id}`);
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/${id}`);
         console.log(response.data);
         setProject(response.data);
       } catch (error) {

@@ -23,7 +23,7 @@ export default function useAddProject(){
                     imageFormData.append('images', file);
                 });
 
-                const imageResponse = await axios.post(`http://localhost:3000/api/uploadImages`, imageFormData, {
+                const imageResponse = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/uploadImages`, imageFormData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
                 imageUrls = imageResponse.data.imageUrls || [];
@@ -37,7 +37,7 @@ export default function useAddProject(){
             };
 
             try {
-                const response = await axios.post(`http://localhost:3000/api/createProject`, projectData);
+                const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/createProject`, projectData);
                 toast.success("Project added successfully!");
                 setFormData({});
             } catch (error) {

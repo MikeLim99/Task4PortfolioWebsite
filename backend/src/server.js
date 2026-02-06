@@ -33,7 +33,7 @@ const upload = multer({
 //middleware
 Server.use(cors(
     {
-        origin: 'http://localhost:5173',
+        origin: process.env.FRONTEND_URL || 'http://localhost:5173',
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     }
 ));
@@ -50,7 +50,8 @@ Server.post('/api/uploadImages', upload.array('images'), (req, res) => {
             return res.status(400).json({ message: 'No files uploaded' });
         }
 
-        const imageUrls = req.files.map(file => `http://localhost:${process.env.PORT}/uploads/${file.filename}`);
+        const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT}`;
+        const imageUrls = req.files.map(file => `${baseUrl}/uploads/${file.filename}`);
         res.status(200).json({ imageUrls });
     } catch (error) {
         res.status(500).json({ message: 'Error uploading images', error: error.message });
@@ -59,6 +60,13 @@ Server.post('/api/uploadImages', upload.array('images'), (req, res) => {
 
 Server.use('/api', router)
 
-Server.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
-})
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 3000;
+    Server.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
+
+// Export for Vercel
+export default Server;

@@ -11,7 +11,7 @@ export const useFetchProjects = () => {
         const fetchProjects = async () => {
             try {
                 setLoading(true)
-                const response = await axios.get('http://localhost:3000/api/')
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/`)
                 console.log(response.data)
                 setProjects(response.data)
                 setError(null)

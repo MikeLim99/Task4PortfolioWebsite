@@ -21,7 +21,7 @@ export default function useAddCertificate() {
                 imageFormData.append('images', formData.CertImage);
 
                 const uploadResponse = await axios.post(
-                    'http://localhost:3000/api/uploadImages',
+                    `${import.meta.env.VITE_BACKEND_URL}/api/uploadImages`,
                     imageFormData,
                     {
                         headers: { 'Content-Type': 'multipart/form-data' }
