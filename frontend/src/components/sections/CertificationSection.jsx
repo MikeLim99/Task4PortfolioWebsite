@@ -10,7 +10,7 @@ function CertificationSection() {
 return (
     <>
     {certificates.map((cert, index) => (
-    <div key={index} className='w-4/5 p-2 relative'>
+    <div key={index} className='w-4/5 py-5 relative'>
             <div className='border-b h-[120px] flex'>
                 <div className='w-[160px] h-[100px] bg-white rounded-md'>
                     <button type='button' onClick={() => { setSelectedImage(cert.CertImage); setIsImageOpen(true); }} className='w-full h-full'>

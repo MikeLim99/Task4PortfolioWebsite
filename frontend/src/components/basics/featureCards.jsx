@@ -21,7 +21,7 @@ function FeatureCards({ limit }) {
         </div>
         <h1 className='overflow-hidden px-3'>{project.ProjectName}</h1>
         {/* tags */}
-        <div className='flex flex-wrap justify-center gap-2 mt-2 font-light text-[12px] overflow-hidden pb-5'>
+        <div className='flex flex-wrap justify-center gap-2 mt-2 font-light text-[12px] overflow-hidden pb-5 h-[50px]'>
             {project.tags && project.tags.map((tag, index) => (
                 <div key={index} className='bg-[#2D3E50] p-1 rounded-2xl min-w-[60px] text-center text-[#ECF0F1] mt-3'>
                     {tag}

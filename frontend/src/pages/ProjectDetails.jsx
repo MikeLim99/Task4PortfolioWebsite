@@ -32,7 +32,7 @@ const [selectedImage, setSelectedImage] = useState('')
         {project && (
           <>
           <div className='flex flex-col gap-y-3'>
-            <p>Project Description : {project.ProjectDescription}</p>
+            <p>Project Description : <span>{project.ProjectDescription}</span></p>
             <p>Assigned Position : {project.assignedPosition}</p>
             <p>Skills Acquired : {project.tags && project.tags.join(', ')}</p>
             <p>Link : <a href={project.projectLink}>{project.projectLink}</a></p>

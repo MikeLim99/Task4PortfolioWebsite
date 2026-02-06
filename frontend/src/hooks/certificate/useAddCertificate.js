@@ -42,19 +42,10 @@ export default function useAddCertificate() {
                 CertImage: imageUrl // Send the URL, not the File object
             };
 
-
-            // if(response.status === 200 || response.status === 201){
-            //     console.log("Certificate added successfully:", response.data);
-            //     setSuccess("Certificate added successfully!");
-            //     setFormData({});
-            // } else {
-            //     console.error("Failed to add certificate:", response.data);
-            //     setError("Failed to add certificate");
-            // }
-
             try {
                 const response = await axios.post('http://localhost:3000/api/certificates',certificateData);
                 toast.success("Certificate added successfully!");
+                setFormData({});
             } catch (error) {
                 toast.error("Error adding certificate");
             }

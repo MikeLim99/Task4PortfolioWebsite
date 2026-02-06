@@ -39,6 +39,7 @@ export default function useAddProject(){
             try {
                 const response = await axios.post(`http://localhost:3000/api/createProject`, projectData);
                 toast.success("Project added successfully!");
+                setFormData({});
             } catch (error) {
                 toast.error("Error adding project");
             }
