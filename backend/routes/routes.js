@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Certificate Routes (must come before /:id)
 router.get('/certificates', getAllCertificates)
-router.post('/certificates', addCertificate)
+router.post('/certificates',uploadImage.single('CertImage') ,addCertificate)
 
 // Project Routes
 router.get('/', getAllProjects)

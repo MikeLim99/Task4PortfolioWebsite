@@ -12,7 +12,9 @@ export async function getAllCertificates(req, res){
 export async function addCertificate(req, res) {
     try {
         console.log('Received certificate data:', req.body);
-        const { Title, Issuer, IssueDate, Description, CertImage } = req.body;
+
+        const { Title, Issuer, IssueDate, Description } = req.body;
+        const CertImage = req.file?.path || req.body.CertImage || '';
 
         const newCertificate = new Certificates({
             Title,
@@ -20,7 +22,7 @@ export async function addCertificate(req, res) {
             IssueDate,
             Description,
             CertImage
-        })
+        });
 
         const savedCertificate = await newCertificate.save();
         res.status(201).json(savedCertificate);

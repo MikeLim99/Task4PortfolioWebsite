@@ -13,42 +13,22 @@ export default function useAddCertificate() {
         setSuccess(null)
 
         try {
-            let imageUrl = '';
-            
-            // Step 1: Upload the image file if one was selected
+            const payload = new FormData();
+            payload.append('Title', formData.Title || '');
+            payload.append('Issuer', formData.Issuer || '');
+            if (formData.IssueDate) payload.append('IssueDate', formData.IssueDate);
+            payload.append('Description', formData.Description || '');
             if (formData.CertImage && formData.CertImage instanceof File) {
-                const imageFormData = new FormData();
-                imageFormData.append('images', formData.CertImage);
-
-                const uploadResponse = await axios.post(
-                    `${import.meta.env.VITE_BACKEND_URL}/api/uploadImages`,
-                    imageFormData,
-                    {
-                        headers: { 'Content-Type': 'multipart/form-data' }
-                    }
-                );
-
-                if (uploadResponse.data.imageUrls && uploadResponse.data.imageUrls.length > 0) {
-                    imageUrl = uploadResponse.data.imageUrls[0];
-                }
+                payload.append('CertImage', formData.CertImage);
             }
 
-            // Step 2: Send certificate data with the image URL
-            const certificateData = {
-                Title: formData.Title,
-                Issuer: formData.Issuer,
-                IssueDate: formData.IssueDate,
-                Description: formData.Description,
-                CertImage: imageUrl // Send the URL, not the File object
-            };
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'}/api/certificates`,
+                payload,
+                { headers: { 'Content-Type': 'multipart/form-data' } }
+            );
 
-            try {
-                const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/certificates`, certificateData);
-                toast.success("Certificate added successfully!");
-                setFormData({});
-            } catch (error) {
-                toast.error("Error adding certificate");
-            }
+            toast.success("Certificate added successfully!");
+            setFormData({});
 
         } catch (error) {
             console.error("Error adding certificate:", error);
