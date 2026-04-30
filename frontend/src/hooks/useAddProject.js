@@ -7,52 +7,69 @@ export default function useAddProject(){
     const [success, setSuccess ] = useState(null)
     const [formData, setFormData ] = useState({})
 
-    const handleSubmit = async (e, uploadedFiles = []) => {
+    const handleChange = (e) => {
+        const {name, value, type, files} = e.target;
+
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: type === 'file' ? files[0] : value
+        }))
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null)
         setSuccess(null)
-        
         try {
-            let imageUrls = [];
+            const payLoad = new FormData();
+            payLoad.append('ProjectName', formData.ProjectName || '');
+            payLoad.append('ProjectDescription', formData.ProjectDescription || '');
+            payLoad.append('assignedPosition', formData.assignedPosition || '');
+            payLoad.append('projectLink', formData.projectLink || '');
 
-            // Upload images first if there are any
-            if (uploadedFiles && uploadedFiles.length > 0) {
-                console.log('Uploading images...');
-                const imageFormData = new FormData();
-                uploadedFiles.forEach((file) => {
-                    imageFormData.append('images', file);
-                });
-
-                const imageResponse = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/uploadImages`, imageFormData, {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                });
-                imageUrls = imageResponse.data.imageUrls || [];
-                console.log('Received image URLs:', imageUrls);
+            if (Array.isArray(formData.tags)) {
+                formData.tags.forEach((tag) => payLoad.append('tags', tag));
             }
 
-            // Then submit project data with image URLs
-            const projectData = {
-                ...formData,
-                images: imageUrls
-            };
-
-            try {
-                const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/createProject`, projectData);
-                toast.success("Project added successfully!");
-                setFormData({});
-            } catch (error) {
-                toast.error("Error adding project");
+            if (formData.image) {
+                payLoad.append('image', formData.image);
             }
+
+            await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'}/api/createProject`,
+                payLoad,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            )
+
+            toast.success('Project added successfully!')
+            setSuccess('Project added successfully!')
+            setFormData({
+                ProjectName: '',
+                ProjectDescription: '',
+                tags: [],
+                assignedPosition: '',
+                projectLink: '',
+                image: null
+            })
         } catch (error) {
-            toast.error("Error uploading images or adding project");
+            const message = error.response?.data?.message || 'Error adding project';
+            setError(message)
+            toast.error(message)
+            console.error("Error adding project:", error);
         }
     }
+
   return { 
     handleSubmit, 
     error,
     success,
     formData,
-    setFormData
+    setFormData,
+    handleChange
 }
 }
 

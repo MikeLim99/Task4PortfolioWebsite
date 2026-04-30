@@ -22,10 +22,9 @@ export async function getAllProjects(req, res){
 
 export async function addProject(req, res) {
     try{
-        const { ProjectName, ProjectDescription, tags=[], assignedPosition, projectLink, images } = req.body
-        
-        console.log('Received project data:', req.body);
-        console.log('Images received:', images);
+        const { ProjectName, ProjectDescription, tags=[], assignedPosition, projectLink } = req.body;
+        const image = req.file?.path || "";
+        const images = image ? [image] : [];
 
         const newProject = new Projects({
             ProjectName,

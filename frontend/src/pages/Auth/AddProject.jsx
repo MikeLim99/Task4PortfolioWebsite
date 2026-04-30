@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/navbar";
 import InputField from "../../components/basics/InputField";
 import Button from "../../components/basics/button";
@@ -6,45 +6,52 @@ import Images from "../../assets/unnamed.jpg";
 import InsertFileButton from "../../components/basics/InsertFileButton";
 import TagsInput from "../../components/basics/TagsInput";
 import useAddProject from "../../hooks/useAddProject";
-import { Toaster } from "react-hot-toast";
 
 function AddProject() {
   const [isImageOpen, setIsImageOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(Images);
   const [uploadedImages, setUploadedImages] = useState([]);
-  const uploadedFilesRef = useRef([]);
   const [tags, setTags] = useState([]);
-  const { handleSubmit, formData, setFormData } = useAddProject();
+  const { handleSubmit, formData, setFormData, handleChange } = useAddProject();
 
-  const handleFileUpload = (files) => {
-    console.log('handleFileUpload called with:', files);
-    const fileArray = Array.from(files);
-    console.log('File array:', fileArray);
-    
-    // Store files in ref immediately (no async issue)
-    uploadedFilesRef.current = [...uploadedFilesRef.current, ...fileArray];
-    console.log('uploadedFilesRef.current:', uploadedFilesRef.current);
-    
-    // Create preview URLs for display
-    const previews = fileArray.map(file => URL.createObjectURL(file));
-    setUploadedImages([...uploadedImages, ...previews]);
+  useEffect(() => {
+    return () => {
+      uploadedImages.forEach((imageUrl) => {
+        URL.revokeObjectURL(imageUrl);
+      });
+    };
+  }, [uploadedImages]);
+
+  const handleFileChange = (files) => {
+    const filesArray = Array.from(files || []);
+    const previewUrls = filesArray.map((file) => URL.createObjectURL(file));
+
+    setUploadedImages((prevUrls) => {
+      prevUrls.forEach((url) => URL.revokeObjectURL(url));
+      return previewUrls;
+    });
+
+    const firstFile = filesArray[0] || null;
+    handleChange({
+      target: {
+        name: "image",
+        type: "file",
+        files: firstFile ? [firstFile] : [],
+      },
+    });
   };
+
 
   const openImageModal = (imgSrc) => {
     setSelectedImage(imgSrc);
     setIsImageOpen(true);
   };
 
-  const onSubmit = (e) => {
-    console.log('onSubmit - uploadedFilesRef.current:', uploadedFilesRef.current);
-    handleSubmit(e, uploadedFilesRef.current);
-  };
-
   return (
     <div className="min-h-screen w-full">
       <Navbar />
       <div className="w-full">
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit}>
           <h1 className="w-full text-center text-3xl font-bold my-5">
             Add Project
           </h1>
@@ -53,28 +60,25 @@ function AddProject() {
               <InputField
                 PlaceHolder={"Project Name"}
                 Type={"text"}
+                Name="ProjectName"
                 classStyle={"w-[400px]"}
-                OnChange={(e) =>
-                  setFormData({ ...formData, ProjectName: e.target.value })
-                }
+                OnChange={handleChange}
                 Required={true}
               />
               <InputField
                 PlaceHolder={"Assigned Position"}
                 Type={"text"}
+                Name="assignedPosition"
                 classStyle={"w-[400px]"}
-                OnChange={(e) =>
-                  setFormData({ ...formData, assignedPosition: e.target.value })
-                }
+                OnChange={handleChange}
                 Required={true}
               />
               <InputField
                 PlaceHolder={"Link"}
                 Type={"text"}
+                Name="projectLink"
                 classStyle={"w-[400px]"}
-                OnChange={(e) =>
-                  setFormData({ ...formData, projectLink: e.target.value })
-                }
+                OnChange={handleChange}
               />
             </div>
           </div>
@@ -84,9 +88,8 @@ function AddProject() {
               placeholder="Project Description"
               className="w-[820px] h-[200px] p-2 rounded-md"
               style={{ color: "#2D3E50", backgroundColor: "#ECF0F1" }}
-              onChange={(e) =>
-                setFormData({ ...formData, ProjectDescription: e.target.value })
-              }
+              onChange={handleChange}
+              name="ProjectDescription"
             />
           </div>
 
@@ -99,7 +102,7 @@ function AddProject() {
                 tags={tags}
                 onTagsChange={(newTags) => {
                   setTags(newTags);
-                  setFormData({ ...formData, tags: newTags });
+                  setFormData((prevData) => ({ ...prevData, tags: newTags }));
                 }}
               />
             </div>
@@ -129,10 +132,8 @@ function AddProject() {
               Label="Attach File"
               Accept="image/*"
               Multiple={true}
-              onChange={(files) => {
-                handleFileUpload(files);
-                setFormData({ ...formData, images: uploadedImages });
-              }}
+              onChange={handleFileChange}
+              Name="image"
             />
           </div>
 

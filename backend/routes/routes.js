@@ -1,6 +1,7 @@
 import express from 'express';
 import { addProject, getAllProjects, updateProject, deleteProject, getProject } from '../controller/projectsController.js';
 import { getAllCertificates, addCertificate } from '../controller/certificateController.js';
+import { uploadImage } from '../middleware/uploadImage.js';
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ router.post('/certificates', addCertificate)
 // Project Routes
 router.get('/', getAllProjects)
 router.get('/:id', getProject)
-router.post('/createProject', addProject)
+router.post('/createProject', uploadImage.single('image'), addProject)
 router.put('/:id', updateProject)
 router.delete('/:id', deleteProject)
 
