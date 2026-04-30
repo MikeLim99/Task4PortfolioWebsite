@@ -20,7 +20,7 @@ return (
                 <div className='flex flex-col w-full mx-2'>
                     <h1>{cert.Title}</h1>
                     <h1 className='absolute right-10'>Issued By : {cert.Issuer}</h1>
-                    <p>{cert.Description}</p>
+                    <p className='overflow-y-scroll max-w-[75%] text-justify'>{cert.Description}</p>
                     <p className='absolute right-10 bottom-8'>Issued : {cert.IssueDate ? new Date(cert.IssueDate).toLocaleDateString() : 'No date indicated'}</p>
                 </div>
             </div>
