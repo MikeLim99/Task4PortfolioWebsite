@@ -29,6 +29,10 @@ Server.use(cors({
     credentials: true
 }))
 
+Server.listen(3000, () => {
+    console.log('Server is running on port 3000');
+})
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -36,6 +40,3 @@ Server.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 
 Server.use('/api', router)
-
-// Export for Vercel
-export default Server;
