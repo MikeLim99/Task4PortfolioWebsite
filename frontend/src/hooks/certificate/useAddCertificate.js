@@ -43,7 +43,7 @@ export default function useAddCertificate() {
             };
 
             try {
-                const response = await axios.post('http://localhost:3000/api/certificates',certificateData);
+                const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/certificates`, certificateData);
                 toast.success("Certificate added successfully!");
                 setFormData({});
             } catch (error) {

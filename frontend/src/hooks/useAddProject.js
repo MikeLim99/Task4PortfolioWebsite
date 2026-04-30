@@ -12,7 +12,7 @@ export default function useAddProject(){
 
         setFormData((prevData) => ({
             ...prevData,
-            [name]: type === 'file' ? files[0] : value
+            [name]: type === 'file' ? Array.from(files || []) : value
         }))
     }
 
@@ -31,8 +31,8 @@ export default function useAddProject(){
                 formData.tags.forEach((tag) => payLoad.append('tags', tag));
             }
 
-            if (formData.image) {
-                payLoad.append('image', formData.image);
+            if (Array.isArray(formData.image) && formData.image.length > 0) {
+                formData.image.forEach((file) => payLoad.append('image', file));
             }
 
             await axios.post(
@@ -53,7 +53,7 @@ export default function useAddProject(){
                 tags: [],
                 assignedPosition: '',
                 projectLink: '',
-                image: null
+                image: []
             })
         } catch (error) {
             const message = error.response?.data?.message || 'Error adding project';

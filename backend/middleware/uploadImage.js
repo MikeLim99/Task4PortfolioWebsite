@@ -51,5 +51,51 @@ export const uploadImage = {
         return res.status(500).json({ error: 'Cloudinary upload failed', details: error.message });
       }
     }
+  ],
+  array: (fieldName, maxCount = 10) => [
+    upload.array(fieldName, maxCount),
+    async (req, res, next) => {
+      if (!req.files || req.files.length === 0) {
+        return next();
+      }
+
+      const cfg = cloudinary.config();
+      if (!cfg.cloud_name || !cfg.api_key || !cfg.api_secret) {
+        return res.status(500).json({ error: 'Cloudinary is not configured on the server.' });
+      }
+
+      try {
+        const uploadedFiles = await Promise.all(
+          req.files.map(
+            (file) =>
+              new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                  {
+                    folder: 'products',
+                    public_id: `product-${Date.now()}-${Math.round(Math.random() * 1e9)}`,
+                    resource_type: 'image'
+                  },
+                  (error, result) => {
+                    if (error) return reject(error);
+                    resolve({
+                      ...file,
+                      path: result.secure_url,
+                      filename: result.public_id
+                    });
+                  }
+                );
+
+                stream.end(file.buffer);
+              })
+          )
+        );
+
+        req.files = uploadedFiles;
+        return next();
+      } catch (error) {
+        console.error('Cloudinary upload error:', error);
+        return res.status(500).json({ error: 'Cloudinary upload failed', details: error.message });
+      }
+    }
   ]
 };

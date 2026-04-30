@@ -12,7 +12,7 @@ router.post('/certificates', addCertificate)
 // Project Routes
 router.get('/', getAllProjects)
 router.get('/:id', getProject)
-router.post('/createProject', uploadImage.single('image'), addProject)
+router.post('/createProject', uploadImage.array('image', 10), addProject)
 router.put('/:id', updateProject)
 router.delete('/:id', deleteProject)
 

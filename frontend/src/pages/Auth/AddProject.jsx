@@ -31,12 +31,11 @@ function AddProject() {
       return previewUrls;
     });
 
-    const firstFile = filesArray[0] || null;
     handleChange({
       target: {
         name: "image",
         type: "file",
-        files: firstFile ? [firstFile] : [],
+        files: filesArray,
       },
     });
   };

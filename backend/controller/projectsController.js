@@ -23,8 +23,9 @@ export async function getAllProjects(req, res){
 export async function addProject(req, res) {
     try{
         const { ProjectName, ProjectDescription, tags=[], assignedPosition, projectLink } = req.body;
-        const image = req.file?.path || "";
-        const images = image ? [image] : [];
+        const images = Array.isArray(req.files)
+            ? req.files.map((file) => file.path).filter(Boolean)
+            : (req.file?.path ? [req.file.path] : []);
 
         const newProject = new Projects({
             ProjectName,
